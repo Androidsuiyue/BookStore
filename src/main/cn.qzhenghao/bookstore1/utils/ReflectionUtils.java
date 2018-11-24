@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 public class ReflectionUtils {
 
 	/**
-	 * ͨ������, ��ö��� Class ʱ�����ĸ���ķ��Ͳ��������� ��: public EmployeeDao extends
+	 * ͨ通过反射,获得指定类的父类的泛型参数的实际类型 如: public EmployeeDao extends
 	 * BaseDao<Employee, String>
 	 * 
 	 * @param clazz
@@ -45,7 +45,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * ͨ������, ��� Class �����������ĸ���ķ��Ͳ������� ��: public EmployeeDao extends
+	 * ͨ通过反射,获得指定类的父类的第一个泛型参数的实际类型. 如BuyerServiceBean extends
 	 * BaseDao<Employee, String>
 	 * 
 	 * @param <T>
@@ -58,7 +58,8 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * ѭ������ת��, ��ȡ����� DeclaredMethod
+	 *循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问. 如向上转型到Object仍无法找到, 返回null.
+	 * 匹配函数名+参数类型。
 	 * 
 	 * @param object
 	 * @param methodName
@@ -82,7 +83,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * ʹ filed ��Ϊ�ɷ���
+	 * 改变private/protected的方法为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
 	 * 
 	 * @param field
 	 */
@@ -93,7 +94,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * ѭ������ת��, ��ȡ����� DeclaredField
+	 * 循环向上转型, 获取对象的DeclaredField, 并强制设置为可访问
 	 * 
 	 * @param object
 	 * @param filedName
@@ -106,23 +107,24 @@ public class ReflectionUtils {
 			try {
 				return superClass.getDeclaredField(filedName);
 			} catch (NoSuchFieldException e) {
-				// Field ���ڵ�ǰ�ඨ��, ��������ת��
+				//  Field不在当前类定义,继续向上转型
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * ֱ�ӵ��ö��󷽷�, ���������η�(private, protected)
+	/***
+	 * 直接调用对象方法, 无视private/protected修饰符.
+	 * 用于一次性调用的情况，否则应使用getAccessibleMethod()函数获得Method后反复调用
 	 * 
 	 * @param object
 	 *            �������
 	 * @param methodName
-	 *            �����еķ�����
+	 *            方法名
 	 * @param parameterTypes
-	 *            �����еķ�����������
+	 *            参数类型
 	 * @param parameters
-	 *            �����еķ�������
+	 *            参数集合
 	 * @return ���෽����ִ�н��
 	 * @throws InvocationTargetException
 	 * @throws IllegalArgumentException
@@ -134,7 +136,7 @@ public class ReflectionUtils {
 		Method method = getDeclaredMethod(object, methodName, parameterTypes);
 
 		if (method == null) {
-			throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
+				throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
 		}
 		// ����Java�Է������м��,��Ҫ�����˽�з�������
 		method.setAccessible(true);
@@ -149,7 +151,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * ֱ�����ö�������ֵ, ���� private/protected ���η�, Ҳ������ setter
+	 * 直接设置对象属性值, 无视private/protected修饰符, 不经过setter函数.
 	 * 
 	 * @param object
 	 * @param fieldName
@@ -166,12 +168,13 @@ public class ReflectionUtils {
 		try {
 			field.set(object, value);
 		} catch (IllegalAccessException e) {
-			System.out.println("�������׳����쳣");
+			System.out.println("不可能抛出的异常:{}");
 		}
 	}
 
 	/**
-	 * ֱ�Ӷ�ȡ���������ֵ, ���� private/protected ���η�, Ҳ������ getter
+	 * 直接读取对象属性值, 无视private/protected修饰符, 不经过setter函数.
+	 *
 	 * 
 	 * @param object
 	 * @param fieldName
@@ -190,7 +193,7 @@ public class ReflectionUtils {
 		try {
 			result = field.get(object);
 		} catch (IllegalAccessException e) {
-			System.out.println("�������׳����쳣");
+			System.out.println("不可能抛出的异常:{}");
 		}
 
 		return result;
