@@ -1,5 +1,8 @@
 package bookstore1.web;
 
+/**
+ * 信用卡
+ */
 public class CriteriaBook {
 
 	private float minPrice = 0;

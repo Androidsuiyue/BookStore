@@ -4,25 +4,25 @@ import java.util.List;
 
 public class Page<T> {
 
-	//��ǰ�ڼ�ҳ
+	//页
 	private int pageNo;
 	
-	//��ǰҳ�� List
+	// List
 	private List<T> list;
 	
-	//ÿҳ��ʾ��������¼
+	//每页数
 	private int pageSize = 3;
 	
-	//���ж�������¼
+	//书本总数
 	private long totalItemNumber;
 
-	//����������Ҫ�� pageNo ���г�ʼ��
+	// pageNo
 	public Page(int pageNo) {
 		super();
 		this.pageNo = pageNo;
 	}
 	
-	//��ҪУ��һ��
+	//得到当前页数
 	public int getPageNo() {
 		if(pageNo < 0)
 			pageNo = 1;
@@ -46,7 +46,7 @@ public class Page<T> {
 		return list;
 	}
 	
-	//��ȡ��ҳ��
+	//得到总页数
 	public int getTotalPageNumber(){
 		
 		int totalPageNumber = (int)totalItemNumber / pageSize;
